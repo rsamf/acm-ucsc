@@ -1,18 +1,97 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+const index = require('./routes/index');
+const users = require('./routes/users');
+const auth = require('./routes/auth');
 
-var app = express();
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const expressSession = require('express-session');
+
+const mongoose = require('mongoose');
+const User = require('./models/user');
+const Test = require('./models/test');
+
+const uri = process.env.DATABASEURL || "mongodb://samf:dbpassword@ds163672.mlab.com:63672/acm-ucsc";
+mongoose.connect(uri);
+Test.create({
+    text : 'test123'
+}, (err, test)=>{
+    console.log(test);
+});
+
+
+passport.serializeUser(function(user, done) {
+    done(null, user._id);
+});
+
+passport.deserializeUser(function(userId, done) {
+    console.log("D");
+    User.findById(userId, function(err, user){
+        if(!err) {
+            return done(null, user);
+        }
+        return done(null, false);
+    });
+});
+
+const strategy = new GoogleStrategy({
+        clientID : "1060625076984-7lkslmheimde03btvdmnp8ijai7jp4fl.apps.googleusercontent.com",
+        clientSecret : "QJ25PMCNvV2YYGrLqqAtm3WJ",
+        callbackURL : "http://localhost:8000/auth/google/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+        process.nextTick(function(){
+            console.log("profile", profile);
+            User.findOne({ googleId : profile.id }, function(err, user){
+                if(err) {
+                    console.error(err);
+                    return done(null, false);
+                } else if(user) {
+                    if(accessToken !== user.accessToken) {
+                        console.log("User's access token is different... updating it");
+                        User.findByIdAndUpdate(user._id, { accessToken : accessToken }).exec();
+                        user.accessToken = accessToken;
+                    }
+                    return done(null, user);
+                } else {
+                    let userObj = {
+                        googleId : profile.id,
+                        role : "Member",
+                        accessToken : accessToken,
+                    };
+                    User.create(userObj, function (err, user) {
+                        if (err) {
+                            console.error(err);
+                            return done(null, false);
+                        }
+                        return done(null, user);
+                    });
+                }
+            });
+        });
+    }
+);
+passport.use('google', strategy);
+
+
+/*
+    Express
+ */
+
+
+const app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -21,13 +100,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(expressSession({
+    secret : 'super duper secret 123',
+    resave : true,
+    saveUninitialized : true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

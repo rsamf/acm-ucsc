@@ -1,8 +1,60 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+body, p, h1, h2, h3, h4, h5, .ui.menu {
+    font-family: 'Roboto', sans-serif;
 }
-
 a {
-  color: #00B7FF;
+  color: inherit;
+  text-decoration: inherit;
+}
+p {
+    font-size: 18px;
+}
+.white {
+    color : white;
+}
+.unique, .clickable:hover {
+    color: #00aadd;
+}
+.clickable {
+    cursor: pointer;
+}
+.ui.container {
+    margin-top : 20px;
+}
+#banner{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 99;
+    background: #2C3E50;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #4CA1AF, #2C3E50);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #4CA1AF, #2C3E50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color: white;
+}
+#banner .content {
+    height : 100%;
+}
+#banner .header {
+    color : white;
+}
+#banner #social-media {
+    position: absolute;
+    z-index: 1;
+    top: 40px;
+    left: 25px;
+}
+#banner #social-media a.item {
+    padding: 10px 0 10px 0;
+    display: block;
+}
+#banner #social-media a.item>i.facebook {
+    color: #3b5998;
+}
+#calendar {
+    border-width: 0;
+    width: 100%;
+}
+.news-block {
+    background-color: #eeeeff;
+    margin: 20px 0 20px 0;
+    display: block;
 }

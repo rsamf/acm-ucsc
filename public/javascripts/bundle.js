@@ -25773,6 +25773,10 @@ var _news = __webpack_require__(228);
 
 var _news2 = _interopRequireDefault(_news);
 
+var _login = __webpack_require__(229);
+
+var _login2 = _interopRequireDefault(_login);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25790,18 +25794,15 @@ var Index = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
 
         _this.state = {
-            loading: true
+            loading: false
         };
+        console.log(user);
         return _this;
     }
 
     _createClass(Index, [{
         key: 'componentDidMount',
-        value: function componentDidMount() {
-            this.setState({
-                loading: false
-            });
-        }
+        value: function componentDidMount() {}
     }, {
         key: 'componentDidUpdate',
         value: function componentDidUpdate() {
@@ -25810,46 +25811,58 @@ var Index = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            return _react2.default.createElement(
-                'div',
-                null,
-                _react2.default.createElement(
+            if (!this.state.loading) {
+                return _react2.default.createElement(
                     'div',
-                    { id: 'nav', className: 'ui huge large top attached menu' },
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { to: '/', className: (this.props.location.pathname === '/' ? 'active ' : "") + 'item' },
-                        'ACM'
-                    ),
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { to: '/events', className: (this.props.location.pathname === '/events' ? 'active ' : "") + 'item' },
-                        'Events'
-                    ),
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { to: '/news', className: (this.props.location.pathname === '/news' ? 'active ' : "") + 'item' },
-                        'News'
-                    ),
+                    null,
                     _react2.default.createElement(
                         'div',
-                        { className: 'right menu' },
+                        { id: 'nav', className: 'ui huge large top attached menu' },
                         _react2.default.createElement(
-                            'a',
-                            { href: '/auth/google', className: 'item' },
-                            _react2.default.createElement('i', { className: 'google icon' }),
-                            ' Sign In'
+                            _reactRouterDom.Link,
+                            { to: '/', className: (this.props.location.pathname === '/' ? 'active ' : "") + 'item' },
+                            'ACM'
+                        ),
+                        _react2.default.createElement(
+                            _reactRouterDom.Link,
+                            { to: '/events', className: (this.props.location.pathname === '/events' ? 'active ' : "") + 'item' },
+                            'Events'
+                        ),
+                        _react2.default.createElement(
+                            _reactRouterDom.Link,
+                            { to: '/news', className: (this.props.location.pathname === '/news' ? 'active ' : "") + 'item' },
+                            'News'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'right menu' },
+                            user ? _react2.default.createElement(
+                                _reactRouterDom.Link,
+                                { to: '/account', className: 'item' },
+                                user.google.displayName
+                            ) : _react2.default.createElement(
+                                _reactRouterDom.Link,
+                                { to: '/login', className: 'item' },
+                                _react2.default.createElement('i', { className: 'google icon' }),
+                                ' Sign In'
+                            )
                         )
+                    ),
+                    _react2.default.createElement(
+                        _reactRouterDom.Switch,
+                        null,
+                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: '/events', component: _events2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: '/news', component: _news2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: '/account', component: _account2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/login', component: _login2.default })
                     )
-                ),
-                _react2.default.createElement(
-                    _reactRouterDom.Switch,
-                    null,
-                    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
-                    _react2.default.createElement(_reactRouterDom.Route, { path: '/events', component: _events2.default }),
-                    _react2.default.createElement(_reactRouterDom.Route, { path: '/news', component: _news2.default }),
-                    _react2.default.createElement(_reactRouterDom.Route, { path: '/account', component: _account2.default })
-                )
+                );
+            }
+            return _react2.default.createElement(
+                'div',
+                { className: '' },
+                'Loading'
             );
         }
     }]);
@@ -25872,6 +25885,8 @@ var _react = __webpack_require__(6);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(92);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25890,39 +25905,44 @@ var Index = function (_React$Component) {
     }
 
     _createClass(Index, [{
-        key: "render",
+        key: 'render',
         value: function render() {
             return _react2.default.createElement(
-                "div",
-                { id: "banner" },
+                'div',
+                { id: 'banner' },
                 _react2.default.createElement(
-                    "div",
-                    { id: "social-media" },
+                    'div',
+                    { id: 'social-media' },
                     _react2.default.createElement(
-                        "a",
-                        { className: "item", href: "https://www.facebook.com/groups/103164379724503", target: "_blank" },
-                        _react2.default.createElement("i", { className: "facebook huge square icon" })
+                        'a',
+                        { className: 'item', href: 'https://www.facebook.com/groups/103164379724503', target: '_blank' },
+                        _react2.default.createElement('i', { className: 'facebook huge square icon' })
+                    ),
+                    _react2.default.createElement(
+                        'a',
+                        { className: 'item', href: '#', target: '_blank' },
+                        _react2.default.createElement('i', { className: 'mail huge square icon' })
                     )
                 ),
                 _react2.default.createElement(
-                    "div",
-                    { className: "content ui middle aligned grid" },
+                    'div',
+                    { className: 'content ui middle aligned grid' },
                     _react2.default.createElement(
-                        "div",
-                        { className: "row" },
+                        'div',
+                        { className: 'row' },
                         _react2.default.createElement(
-                            "div",
-                            { className: "column center aligned" },
+                            'div',
+                            { className: 'column center aligned' },
                             _react2.default.createElement(
-                                "h1",
+                                'h1',
                                 null,
-                                "Association for Computing Machinery at UCSC"
+                                'Association for Computing Machinery at UCSC'
                             ),
                             _react2.default.createElement(
-                                "button",
-                                { className: "ui teal basic right labeled icon button" },
-                                "Get Involved ",
-                                _react2.default.createElement("i", { className: "right chevron icon" })
+                                _reactRouterDom.Link,
+                                { to: '/login', className: 'ui teal basic right labeled icon button' },
+                                'Get Involved ',
+                                _react2.default.createElement('i', { className: 'right chevron icon' })
                             )
                         )
                     )
@@ -26247,6 +26267,64 @@ var Index = function (_React$Component) {
 }(_react2.default.Component);
 
 module.exports = Index;
+
+/***/ }),
+/* 229 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(6);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Login = function (_React$Component) {
+    _inherits(Login, _React$Component);
+
+    function Login(props) {
+        _classCallCheck(this, Login);
+
+        return _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+    }
+
+    _createClass(Login, [{
+        key: "render",
+        value: function render() {
+            if (this.props.user) {
+                return _react2.default.createElement(
+                    "h1",
+                    { className: "ui header" },
+                    "You are already logged in"
+                );
+            }
+            return _react2.default.createElement(
+                "h1",
+                { className: "ui header" },
+                "Please make sure to login with your UCSC email!",
+                _react2.default.createElement(
+                    "a",
+                    { href: "/auth/google", className: "ui primary button" },
+                    "Login"
+                )
+            );
+        }
+    }]);
+
+    return Login;
+}(_react2.default.Component);
+
+module.exports = Login;
 
 /***/ })
 /******/ ]);

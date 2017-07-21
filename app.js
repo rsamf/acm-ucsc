@@ -47,21 +47,21 @@ const strategy = new GoogleStrategy({
     },
     function(accessToken, refreshToken, profile, done) {
         process.nextTick(function(){
-            console.log("profile", profile);
-            User.findOne({ googleId : profile.id }, function(err, user){
+            User.findOne({ "google.id" : profile.id }, function(err, user){
                 if(err) {
                     console.error(err);
                     return done(null, false);
                 } else if(user) {
-                    if(accessToken !== user.accessToken) {
-                        console.log("User's access token is different... updating it");
-                        User.findByIdAndUpdate(user._id, { accessToken : accessToken }).exec();
-                        user.accessToken = accessToken;
-                    }
-                    return done(null, user);
+                    User.findByIdAndUpdate(user._id, { accessToken : accessToken, google : profile }, (err, user)=>{
+                        if(!err){
+                            console.log(user);
+                            return done(null, user);
+                        }
+                        return done(null, false);
+                    });
                 } else {
                     let userObj = {
-                        googleId : profile.id,
+                        google : profile,
                         role : "Member",
                         accessToken : accessToken,
                     };

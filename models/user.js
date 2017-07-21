@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-    googleId : String,
+    google : Object,
     role : String,
     postedEvents : [{
         type : mongoose.Schema.Types.ObjectId,

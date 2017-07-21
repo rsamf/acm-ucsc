@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 class Index extends React.Component {
     constructor(props){
@@ -11,6 +12,9 @@ class Index extends React.Component {
                     <a className="item" href="https://www.facebook.com/groups/103164379724503" target="_blank">
                         <i className="facebook huge square icon"/>
                     </a>
+                    <a className="item" href="#" target="_blank">
+                        <i className="mail huge square icon"/>
+                    </a>
                     {/*
                                 .
                                 .
@@ -22,9 +26,9 @@ class Index extends React.Component {
                     <div className="row">
                         <div className="column center aligned">
                             <h1>Association for Computing Machinery at UCSC</h1>
-                            <button className="ui teal basic right labeled icon button">
+                            <Link to="/login" className="ui teal basic right labeled icon button">
                                 Get Involved <i className="right chevron icon"/>
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

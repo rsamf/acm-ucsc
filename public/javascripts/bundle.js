@@ -26217,12 +26217,30 @@ var QR = function (_React$Component) {
     }
 
     _createClass(QR, [{
-        key: 'render',
+        key: "render",
         value: function render() {
             return _react2.default.createElement(
-                'div',
-                null,
-                'QR'
+                "div",
+                { className: "ui grid" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "two column centered row" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "column" },
+                        _react2.default.createElement(
+                            "div",
+                            { className: "ui fluid image" },
+                            _react2.default.createElement(
+                                "div",
+                                { className: "ui red ribbon label" },
+                                _react2.default.createElement("i", { className: "qrcode white icon" }),
+                                user._id
+                            ),
+                            _react2.default.createElement("img", { src: "/qr", alt: "", id: "qrcode" })
+                        )
+                    )
+                )
             );
         }
     }]);

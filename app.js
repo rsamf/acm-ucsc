@@ -5,10 +5,6 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const index = require('./routes/index');
-const users = require('./routes/users');
-const auth = require('./routes/auth');
-
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const expressSession = require('express-session');
@@ -109,10 +105,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
-app.use('/', index);
-app.use('/users', users);
-app.use('/auth', auth);
+app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
+app.use('/auth', require('./routes/auth'));
+app.use('/qr', require('./routes/qr'));
+app.use('/events', require('./routes/events'));
+app.use('/articles', require('./routes/articles'));
+app.use('/images', require('./routes/images'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

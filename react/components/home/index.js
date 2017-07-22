@@ -12,9 +12,9 @@ class Index extends React.Component {
                     <a className="item" href="https://www.facebook.com/groups/103164379724503" target="_blank">
                         <i className="facebook huge square icon"/>
                     </a>
-                    <a className="item" href="#" target="_blank">
+                    <div className="item" href="#" target="_blank">
                         <i className="mail huge square icon"/>
-                    </a>
+                    </div>
                     {/*
                                 .
                                 .

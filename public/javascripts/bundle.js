@@ -25958,7 +25958,7 @@ var Index = function (_React$Component) {
                         _react2.default.createElement('i', { className: 'facebook huge square icon' })
                     ),
                     _react2.default.createElement(
-                        'a',
+                        'div',
                         { className: 'item', href: '#', target: '_blank' },
                         _react2.default.createElement('i', { className: 'mail huge square icon' })
                     )
@@ -26720,13 +26720,13 @@ var Index = function (_React$Component) {
                         { className: "footer" },
                         _react2.default.createElement(
                             "span",
-                            { className: "author" },
-                            "Richard Franklin"
+                            { className: "ui image label" },
+                            _react2.default.createElement("img", { src: "/images/avatar/small/joe.jpg" }),
+                            " Richard Franklin"
                         ),
-                        " ",
                         _react2.default.createElement(
                             "span",
-                            { className: "date" },
+                            { className: "ui label" },
                             "18 August 2017"
                         )
                     )
@@ -26781,12 +26781,17 @@ var Login = function (_React$Component) {
                 );
             }
             return _react2.default.createElement(
-                "h1",
-                { className: "ui header" },
-                "Please make sure to login with your UCSC email!",
+                "div",
+                { className: "ui container" },
+                _react2.default.createElement(
+                    "h1",
+                    { className: "ui header" },
+                    "Please make sure to login with your UCSC email!"
+                ),
                 _react2.default.createElement(
                     "a",
-                    { href: "/auth/google", className: "ui primary button" },
+                    { href: "/auth/google", className: "ui right labeled icon button" },
+                    _react2.default.createElement("i", { className: "right arrow icon" }),
                     "Login"
                 )
             );

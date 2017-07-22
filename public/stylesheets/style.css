@@ -24,7 +24,7 @@ p {
     height: 100%;
     width: 100%;
     position: fixed;
-    z-index: -1;
+    z-index: 1;
     background: #2C3E50;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #4CA1AF, #2C3E50);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #4CA1AF, #2C3E50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
@@ -42,8 +42,11 @@ p {
     top: 40px;
     left: 25px;
 }
-#banner #social-media a.item {
-    padding: 10px 0 10px 0;
+#banner a, #banner .item {
+    z-index: 99;
+}
+#banner #social-media .item {
+    margin: 10px 0 10px 0;
     display: block;
 }
 #banner #social-media a.item>i.facebook {

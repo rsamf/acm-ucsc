@@ -7,10 +7,14 @@ const UserSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : "event"
     }],
-    postedNews : [{
+    postedArticles : [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : "news"
+        ref : "article"
     }],
+    qr : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "qr"
+    },
     accessToken : String,
     refreshToken : String
 }, {

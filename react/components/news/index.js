@@ -23,7 +23,14 @@ class Index extends React.Component {
                 <div key={i} className="ui segment news-block">
                     <h3 className="title">Title</h3>
                     <p className="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error magni omnis perferendis qui quo recusandae tenetur ut? Adipisci alias autem ducimus laboriosam numquam officiis soluta tempora tenetur voluptatem voluptates! Quidem!</p>
-                    <div className="footer"><span className="author">Richard Franklin</span> <span className="date">18 August 2017</span></div>
+                    <div className="footer">
+                        <span className="ui image label">
+                            <img src="/images/avatar/small/joe.jpg"/> Richard Franklin
+                        </span>
+                        <span className="ui label">
+                            18 August 2017
+                        </span>
+                    </div>
                 </div>
             );
         }

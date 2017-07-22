@@ -16,6 +16,10 @@ class Index extends React.Component {
     }
 
     componentDidMount(){
+        $('#account-dropdown').dropdown({
+            on : 'hover',
+            direction : 'downward'
+        });
     }
     componentDidUpdate(){
         console.log(this.props);
@@ -39,9 +43,15 @@ class Index extends React.Component {
                         <div className="right menu">
                             {
                                 user ?
-                                    <Link to="/account" className="item">
-                                        {user.google.displayName}
-                                    </Link>
+                                    <div className="ui item dropdown" id="account-dropdown">
+                                        <img className="ui avatar image" src={user.google.photos[0].value} alt="oops :p"/> <span>{user.google.displayName}</span> <i className="dropdown icon"/>
+                                        <div className="menu">
+                                            <Link to="/account/profile" className="item">Profile</Link>
+                                            <Link to="/account/qr" className="item">QR</Link>
+                                            <Link to="/account/dashboard" className="item">Dashboard</Link>
+                                            <a href="/auth/logout" className="item">Logout</a>
+                                        </div>
+                                    </div>
                                     :
                                     <Link to="/login" className="item">
                                         <i className="google icon"/> Sign In
@@ -55,7 +65,7 @@ class Index extends React.Component {
                         <Route exact path="/" component={Home}/>
                         <Route path="/events" component={Events}/>
                         <Route path="/news" component={News}/>
-                        <Route path="/account" component={Account}/>
+                        <Route path="/account" render={routeProps=><Account {...routeProps}/>}/>
                         <Route exact path="/login" component={Login}/>
                     </Switch>
                 </div>

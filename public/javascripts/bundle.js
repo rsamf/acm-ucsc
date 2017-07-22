@@ -26263,6 +26263,14 @@ var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _events = __webpack_require__(233);
+
+var _events2 = _interopRequireDefault(_events);
+
+var _news = __webpack_require__(234);
+
+var _news2 = _interopRequireDefault(_news);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26331,8 +26339,16 @@ var Dashboard = function (_React$Component) {
                 });
                 console.log(self.state.newEvent);
             }
-            function submitEvent() {}
-            function submitArticle() {}
+            function submitEvent() {
+                _events2.default.postEvent(self.state.newEvent, function (data) {
+                    console.log(data);
+                });
+            }
+            function submitArticle() {
+                _news2.default.postEvent(self.state.newEvent, function (data) {
+                    console.log(data);
+                });
+            }
             function renderPosts() {
                 return _react2.default.createElement(
                     'div',
@@ -26505,6 +26521,10 @@ var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _events = __webpack_require__(233);
+
+var _events2 = _interopRequireDefault(_events);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26515,6 +26535,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var SMALL_THRESHOLD = 750;
 
+/*
+    Events
+ */
+
 var Index = function (_React$Component) {
     _inherits(Index, _React$Component);
 
@@ -26524,13 +26548,15 @@ var Index = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
 
         _this.state = {
-            screenWidth: $(window).width() <= SMALL_THRESHOLD ? "SMALL" : "LARGE"
+            screenWidth: $(window).width() <= SMALL_THRESHOLD ? "SMALL" : "LARGE",
+            events: []
         };
+        _this.getEvents();
         return _this;
     }
 
     _createClass(Index, [{
-        key: "componentDidMount",
+        key: 'componentDidMount',
         value: function componentDidMount() {
             console.log(this.state.screenWidth);
             var self = this;
@@ -26548,117 +26574,104 @@ var Index = function (_React$Component) {
             });
         }
     }, {
-        key: "render",
+        key: 'getEvents',
+        value: function getEvents() {
+            var self = this;
+            console.log("getting events");
+            _events2.default.getEvents(function (data) {
+                console.log("EVENTS:", data);
+                self.setState({
+                    events: data
+                });
+            });
+        }
+    }, {
+        key: 'render',
         value: function render() {
             return _react2.default.createElement(
-                "div",
-                { className: "ui container" },
+                'div',
+                { className: 'ui container' },
                 _react2.default.createElement(
-                    "h1",
-                    { className: "unique" },
-                    "Events"
+                    'h1',
+                    { className: 'unique' },
+                    'Events'
                 ),
                 _react2.default.createElement(
-                    "h3",
+                    'h3',
                     null,
-                    "Upcoming"
+                    'Upcoming'
                 ),
                 _react2.default.createElement(
-                    "div",
-                    { className: "ui stackable two column grid" },
+                    'div',
+                    { className: 'ui stackable two column grid' },
                     _react2.default.createElement(
-                        "div",
-                        { className: "column" },
-                        _react2.default.createElement("iframe", { src: "https://calendar.google.com/calendar/embed?showTitle=0&showNav=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&height=800&wkst=1&bgcolor=%23ffffff&src=rsamfranklin%40gmail.com&color=%231B887A&ctz=America%2FLos_Angeles",
-                            id: "calendar", width: "400", height: "400", frameBorder: "0", scrolling: "no"
+                        'div',
+                        { className: 'column' },
+                        _react2.default.createElement('iframe', { src: 'https://calendar.google.com/calendar/embed?showTitle=0&showNav=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&height=800&wkst=1&bgcolor=%23ffffff&src=rsamfranklin%40gmail.com&color=%231B887A&ctz=America%2FLos_Angeles',
+                            id: 'calendar', width: '400', height: '400', frameBorder: '0', scrolling: 'no'
                         })
                     ),
                     _react2.default.createElement(
-                        "div",
-                        { className: "column" },
+                        'div',
+                        { className: 'column' },
                         _react2.default.createElement(
-                            "div",
-                            { className: "ui blue segment" },
+                            'div',
+                            { className: 'ui blue segment' },
                             _react2.default.createElement(
-                                "p",
+                                'p',
                                 null,
-                                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, laudantium officia. Beatae corporis ipsam officia qui rem. Cupiditate ex fuga id incidunt libero, non reprehenderit. Eum incidunt laborum omnis recusandae?"
+                                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, laudantium officia. Beatae corporis ipsam officia qui rem. Cupiditate ex fuga id incidunt libero, non reprehenderit. Eum incidunt laborum omnis recusandae?'
                             )
                         )
                     )
                 ),
                 _react2.default.createElement(
-                    "h3",
+                    'h3',
                     null,
-                    "Past"
+                    'Past'
                 ),
                 _react2.default.createElement(
-                    "div",
-                    { className: "ui two column grid" },
+                    'div',
+                    { className: 'ui two column grid' },
                     _react2.default.createElement(
-                        "div",
-                        { className: "column" },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "ui segment" },
-                            _react2.default.createElement(
-                                "p",
-                                null,
-                                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates."
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "ui segment" },
-                            _react2.default.createElement(
-                                "p",
-                                null,
-                                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates."
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "ui segment" },
-                            _react2.default.createElement(
-                                "p",
-                                null,
-                                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates."
-                            )
-                        )
+                        'div',
+                        { className: 'column' },
+                        this.state.events.map(eachEvenEvent)
                     ),
                     _react2.default.createElement(
-                        "div",
-                        { className: "column" },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "ui segment" },
-                            _react2.default.createElement(
-                                "p",
-                                null,
-                                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam autem corporis delectus eligendi fugiat ipsa libero maxime minus praesentium quas? Cumque enim excepturi facilis fugiat illum, in libero necessitatibus voluptatibus!"
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "ui segment" },
-                            _react2.default.createElement(
-                                "p",
-                                null,
-                                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates."
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "ui segment" },
-                            _react2.default.createElement(
-                                "p",
-                                null,
-                                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates."
-                            )
-                        )
+                        'div',
+                        { className: 'column' },
+                        this.state.events.map(eachOddEvent)
                     )
                 )
             );
+            function getUpcomingEvents() {}
+            function eachEvenEvent(event, i) {
+                if (i % 2 === 0) {
+                    return _react2.default.createElement(
+                        'div',
+                        { key: i, className: 'ui segment' },
+                        _react2.default.createElement(
+                            'p',
+                            null,
+                            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.'
+                        )
+                    );
+                }
+            }
+            function eachOddEvent(event, i) {
+                if (i % 2 === 1) {
+                    return _react2.default.createElement(
+                        'div',
+                        { key: i, className: 'ui segment' },
+                        _react2.default.createElement(
+                            'p',
+                            null,
+                            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.'
+                        )
+                    );
+                }
+            }
         }
     }]);
 
@@ -26679,6 +26692,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _news = __webpack_require__(234);
+
+var _news2 = _interopRequireDefault(_news);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26703,49 +26720,60 @@ var Index = function (_React$Component) {
     }
 
     _createClass(Index, [{
-        key: "render",
+        key: 'getNews',
+        value: function getNews() {
+            var self = this;
+            _news2.default.getNews(function (data) {
+                console.log(data);
+                self.setState({
+                    news: data
+                });
+            });
+        }
+    }, {
+        key: 'render',
         value: function render() {
             return _react2.default.createElement(
-                "div",
-                { className: "ui container" },
+                'div',
+                { className: 'ui container' },
                 _react2.default.createElement(
-                    "h1",
-                    { className: "unique" },
-                    "News"
+                    'h1',
+                    { className: 'unique' },
+                    'News'
                 ),
                 _react2.default.createElement(
-                    "div",
-                    { className: "one column grid" },
+                    'div',
+                    { className: 'one column grid' },
                     this.state.news.map(eachArticle)
                 )
             );
             function eachArticle(article, i) {
                 return _react2.default.createElement(
-                    "div",
-                    { key: i, className: "ui segment news-block" },
+                    'div',
+                    { key: i, className: 'ui segment news-block' },
                     _react2.default.createElement(
-                        "h3",
-                        { className: "title" },
-                        "Title"
+                        'h3',
+                        { className: 'title' },
+                        'Title'
                     ),
                     _react2.default.createElement(
-                        "p",
-                        { className: "content" },
-                        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error magni omnis perferendis qui quo recusandae tenetur ut? Adipisci alias autem ducimus laboriosam numquam officiis soluta tempora tenetur voluptatem voluptates! Quidem!"
+                        'p',
+                        { className: 'content' },
+                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error magni omnis perferendis qui quo recusandae tenetur ut? Adipisci alias autem ducimus laboriosam numquam officiis soluta tempora tenetur voluptatem voluptates! Quidem!'
                     ),
                     _react2.default.createElement(
-                        "div",
-                        { className: "footer" },
+                        'div',
+                        { className: 'footer' },
                         _react2.default.createElement(
-                            "span",
-                            { className: "ui image label" },
-                            _react2.default.createElement("img", { src: "/images/avatar/small/joe.jpg" }),
-                            " Richard Franklin"
+                            'span',
+                            { className: 'ui image label' },
+                            _react2.default.createElement('img', { src: '/images/avatar/small/joe.jpg' }),
+                            ' Richard Franklin'
                         ),
                         _react2.default.createElement(
-                            "span",
-                            { className: "ui label" },
-                            "18 August 2017"
+                            'span',
+                            { className: 'ui label' },
+                            '18 August 2017'
                         )
                     )
                 );
@@ -26820,6 +26848,64 @@ var Login = function (_React$Component) {
 }(_react2.default.Component);
 
 module.exports = Login;
+
+/***/ }),
+/* 233 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    getEvents: function getEvents(callback) {
+        $.ajax({
+            method: "GET",
+            url: "/events",
+            dataType: "json",
+            success: callback,
+            error: console.error
+        });
+    },
+    postEvent: function postEvent(data, callback) {
+        $.ajax({
+            method: "POST",
+            url: "/events",
+            data: data,
+            dataType: "json",
+            success: callback,
+            error: console.error
+        });
+    }
+};
+
+/***/ }),
+/* 234 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    getNews: function getNews(callback) {
+        $.ajax({
+            method: "GET",
+            url: "/articles",
+            dataType: "json",
+            success: callback,
+            error: console.error
+        });
+    },
+    postArticle: function postArticle(data, callback) {
+        $.ajax({
+            method: "POST",
+            url: "/articles",
+            data: data,
+            dataType: "json",
+            success: callback,
+            error: console.error
+        });
+    }
+};
 
 /***/ })
 /******/ ]);

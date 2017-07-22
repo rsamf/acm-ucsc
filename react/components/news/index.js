@@ -1,4 +1,5 @@
 import React from 'react';
+import networking from '../../networking/news';
 
 class Index extends React.Component {
     constructor(props){
@@ -8,6 +9,15 @@ class Index extends React.Component {
         };
     }
 
+    getNews(){
+        let self = this;
+        networking.getNews(data=>{
+            console.log(data);
+            self.setState({
+                news : data
+            });
+        });
+    }
 
     render(){
         return (

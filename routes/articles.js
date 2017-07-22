@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Article = require('../models/image');
+const Article = require('../models/article');
 const User = require('../models/user');
 const fault = require('../bin/globals').fault;
 

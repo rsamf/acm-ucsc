@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const Event = require('../models/image');
+const Event = require('../models/event');
+const User = require('../models/user');
 const fault = require('../bin/globals').fault;
 
 const upload = require('multer')({
@@ -18,7 +19,7 @@ const upload = require('multer')({
 
 
 router.get('/', function(req, res, next){
-    Event.find({}, (err, events)=>{
+    Event.find({}).sort({date : -1}).exec((err, events)=>{
         fault(err, next);
         res.json(events);
     });

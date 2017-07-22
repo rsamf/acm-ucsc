@@ -1,4 +1,7 @@
 import React from 'react';
+import eventsNetworking from '../../networking/events';
+import newsNetworking from '../../networking/news';
+
 
 class Dashboard extends React.Component {
 
@@ -46,10 +49,14 @@ class Dashboard extends React.Component {
             console.log(self.state.newEvent);
         }
         function submitEvent(){
-
+            eventsNetworking.postEvent(self.state.newEvent, data=>{
+                console.log(data);
+            });
         }
         function submitArticle(){
-
+            newsNetworking.postEvent(self.state.newEvent, data=>{
+                console.log(data);
+            });
         }
         function renderPosts(){
             return (

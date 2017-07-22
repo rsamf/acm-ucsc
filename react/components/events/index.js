@@ -1,12 +1,19 @@
 import React from 'react';
+import networking from '../../networking/events';
 const SMALL_THRESHOLD = 750;
+
+/*
+    Events
+ */
 
 class Index extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            screenWidth : $(window).width() <= SMALL_THRESHOLD ? "SMALL" : "LARGE"
-        }
+            screenWidth : $(window).width() <= SMALL_THRESHOLD ? "SMALL" : "LARGE",
+            events : []
+        };
+        this.getEvents();
     }
     componentDidMount(){
         console.log(this.state.screenWidth);
@@ -22,6 +29,17 @@ class Index extends React.Component {
                     screenWidth : "LARGE"
                 });
             }
+        });
+    }
+
+    getEvents(){
+        let self = this;
+        console.log("getting events");
+        networking.getEvents(data=>{
+            console.log("EVENTS:", data);
+            self.setState({
+                events : data
+            });
         });
     }
 
@@ -47,43 +65,40 @@ class Index extends React.Component {
                 <h3>Past</h3>
                 <div className="ui two column grid">
                     <div className="column">
-                        <div className="ui segment">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
-                            </p>
-                        </div>
-                        <div className="ui segment">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
-                            </p>
-                        </div>
-                        <div className="ui segment">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
-                            </p>
-                        </div>
+                        {this.state.events.map(eachEvenEvent)}
                     </div>
                     <div className="column">
-                        <div className="ui segment">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam autem corporis delectus eligendi fugiat ipsa libero maxime minus praesentium quas? Cumque enim excepturi facilis fugiat illum, in libero necessitatibus voluptatibus!
-                            </p>
-                        </div>
-                        <div className="ui segment">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
-                            </p>
-                        </div>
-                        <div className="ui segment">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
-                            </p>
-                        </div>
+                        {this.state.events.map(eachOddEvent)}
+
                     </div>
                 </div>
             </div>
-
         );
+        function getUpcomingEvents(){
+
+        }
+        function eachEvenEvent(event, i){
+            if(i%2===0){
+                return (
+                    <div key={i} className="ui segment">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
+                        </p>
+                    </div>
+                );
+            }
+        }
+        function eachOddEvent(event, i){
+            if(i%2===1){
+                return (
+                    <div key={i} className="ui segment">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
+                        </p>
+                    </div>
+                );
+            }
+        }
     }
 }
 

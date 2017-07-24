@@ -15,14 +15,21 @@ class Login extends React.Component {
             );
         }
         return (
-            <div className="ui container">
-                <h1 className="ui header">
-                    Please make sure to login with your UCSC email!
-                </h1>
-                <a href="/auth/google" className="ui right labeled icon button">
+        <div className="ui container center aligned">
+            <h1 className="ui icon header">
+                <i className="teal sign in icon"/>
+                <div className="content">
+                    Welcome
+                    <div className="sub header">Please make sure to login with your UCSC email!</div>
+                </div>
+            </h1>
+            <div className="">
+                <a href="/auth/google" className="ui right teal labeled icon button">
                     <i className="right arrow icon"/>Login
                 </a>
             </div>
+
+        </div>
         );
     }
 }

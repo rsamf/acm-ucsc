@@ -3,6 +3,7 @@ import { Route, Link, Switch } from 'react-router-dom';
 import Profile from './profile';
 import QR from './qr';
 import Dashboard from './dashboard';
+import NotFound from '../404';
 
 class Index extends React.Component {
     constructor(props){
@@ -20,16 +21,24 @@ class Index extends React.Component {
                     <Link to="/account/qr" className={(this.props.location.pathname === '/account/qr' ? 'active ' : "") + 'item'}>
                         QR
                     </Link>
-                    <Link to="/account/dashboard" className={(this.props.location.pathname === '/account/dashboard' ? 'active ' : "") + 'item'}>
-                        Dashboard
-                    </Link>
+                    {
+                        user.role !== "Member" &&
+                        <Link to="/account/dashboard" className={(this.props.location.pathname === '/account/dashboard' ? 'active ' : "") + 'item'}>
+                            Dashboard
+                        </Link>
+                    }
+
                 </div>
                 <div className="ui segment">
                     <Switch>
                         <Route exact path="/account" component={Profile}/>
                         <Route path="/account/profile" component={Profile}/>
                         <Route path="/account/qr" component={QR}/>
-                        <Route path="/account/dashboard" component={Dashboard}/>
+                        {
+                            user.role !== "Member" &&
+                            <Route path="/account/dashboard" component={Dashboard}/>
+                        }
+                        <Route path="/account/*" component={NotFound}/>
                     </Switch>
                 </div>
             </div>

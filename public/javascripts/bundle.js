@@ -25835,6 +25835,10 @@ var _login = __webpack_require__(234);
 
 var _login2 = _interopRequireDefault(_login);
 
+var _ = __webpack_require__(235);
+
+var _2 = _interopRequireDefault(_);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25924,7 +25928,7 @@ var Index = function (_React$Component) {
                                         { to: '/account/qr', className: 'item' },
                                         'QR'
                                     ),
-                                    _react2.default.createElement(
+                                    user.role !== "Member" && _react2.default.createElement(
                                         _reactRouterDom.Link,
                                         { to: '/account/dashboard', className: 'item' },
                                         'Dashboard'
@@ -25949,10 +25953,11 @@ var Index = function (_React$Component) {
                         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: '/events', component: _events2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: '/news', component: _news2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: '/account', render: function render(routeProps) {
+                        user && _react2.default.createElement(_reactRouterDom.Route, { path: '/account', render: function render(routeProps) {
                                 return _react2.default.createElement(_account2.default, routeProps);
                             } }),
-                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/login', component: _login2.default })
+                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/login', component: _login2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: '*', component: _2.default })
                     )
                 );
             }
@@ -26080,6 +26085,10 @@ var _dashboard = __webpack_require__(231);
 
 var _dashboard2 = _interopRequireDefault(_dashboard);
 
+var _ = __webpack_require__(235);
+
+var _2 = _interopRequireDefault(_);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26117,7 +26126,7 @@ var Index = function (_React$Component) {
                         { to: '/account/qr', className: (this.props.location.pathname === '/account/qr' ? 'active ' : "") + 'item' },
                         'QR'
                     ),
-                    _react2.default.createElement(
+                    user.role !== "Member" && _react2.default.createElement(
                         _reactRouterDom.Link,
                         { to: '/account/dashboard', className: (this.props.location.pathname === '/account/dashboard' ? 'active ' : "") + 'item' },
                         'Dashboard'
@@ -26132,7 +26141,8 @@ var Index = function (_React$Component) {
                         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/account', component: _profile2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: '/account/profile', component: _profile2.default }),
                         _react2.default.createElement(_reactRouterDom.Route, { path: '/account/qr', component: _qr2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: '/account/dashboard', component: _dashboard2.default })
+                        user.role !== "Member" && _react2.default.createElement(_reactRouterDom.Route, { path: '/account/dashboard', component: _dashboard2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: '/account/*', component: _2.default })
                     )
                 )
             );
@@ -27085,17 +27095,31 @@ var Login = function (_React$Component) {
             }
             return _react2.default.createElement(
                 "div",
-                { className: "ui container" },
+                { className: "ui container center aligned" },
                 _react2.default.createElement(
                     "h1",
-                    { className: "ui header" },
-                    "Please make sure to login with your UCSC email!"
+                    { className: "ui icon header" },
+                    _react2.default.createElement("i", { className: "teal sign in icon" }),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "content" },
+                        "Welcome",
+                        _react2.default.createElement(
+                            "div",
+                            { className: "sub header" },
+                            "Please make sure to login with your UCSC email!"
+                        )
+                    )
                 ),
                 _react2.default.createElement(
-                    "a",
-                    { href: "/auth/google", className: "ui right labeled icon button" },
-                    _react2.default.createElement("i", { className: "right arrow icon" }),
-                    "Login"
+                    "div",
+                    { className: "" },
+                    _react2.default.createElement(
+                        "a",
+                        { href: "/auth/google", className: "ui right teal labeled icon button" },
+                        _react2.default.createElement("i", { className: "right arrow icon" }),
+                        "Login"
+                    )
                 )
             );
         }
@@ -27105,6 +27129,66 @@ var Login = function (_React$Component) {
 }(_react2.default.Component);
 
 module.exports = Login;
+
+/***/ }),
+/* 235 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(5);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NotFound = function (_React$Component) {
+    _inherits(NotFound, _React$Component);
+
+    function NotFound(props) {
+        _classCallCheck(this, NotFound);
+
+        return _possibleConstructorReturn(this, (NotFound.__proto__ || Object.getPrototypeOf(NotFound)).call(this, props));
+    }
+
+    _createClass(NotFound, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { className: "ui container center aligned" },
+                _react2.default.createElement(
+                    "h1",
+                    { className: "ui icon header" },
+                    _react2.default.createElement("i", { className: "frown icon" }),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "content" },
+                        "404",
+                        _react2.default.createElement(
+                            "div",
+                            { className: "sub header" },
+                            "Sorry, but I couldn't find the page you were looking for"
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return NotFound;
+}(_react2.default.Component);
+
+module.exports = NotFound;
 
 /***/ })
 /******/ ]);

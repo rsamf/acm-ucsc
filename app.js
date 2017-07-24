@@ -21,6 +21,12 @@ Test.create({
     console.log(test);
 });
 
+User.findById("59719600291d2d35b4b36bd1", (err, user)=>{
+    console.log("FOUND:", user);
+    user.role = "Webmaster";
+    user.save();
+    console.log("USER IS NOW:", user);
+});
 
 passport.serializeUser(function(user, done) {
     done(null, user._id);

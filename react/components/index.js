@@ -5,6 +5,7 @@ import Account from './account';
 import Events from './events';
 import News from './news';
 import Login from './login';
+import NotFound from './404';
 
 class Index extends React.Component {
     constructor(props){
@@ -48,7 +49,10 @@ class Index extends React.Component {
                                         <div className="menu">
                                             <Link to="/account/profile" className="item">Profile</Link>
                                             <Link to="/account/qr" className="item">QR</Link>
-                                            <Link to="/account/dashboard" className="item">Dashboard</Link>
+                                            {
+                                                user.role !== "Member" &&
+                                                <Link to="/account/dashboard" className="item">Dashboard</Link>
+                                            }
                                             <a href="/auth/logout" className="item">Logout</a>
                                         </div>
                                     </div>
@@ -65,8 +69,12 @@ class Index extends React.Component {
                         <Route exact path="/" component={Home}/>
                         <Route path="/events" component={Events}/>
                         <Route path="/news" component={News}/>
-                        <Route path="/account" render={routeProps=><Account {...routeProps}/>}/>
+                        {
+                            user &&
+                            <Route path="/account" render={routeProps=><Account {...routeProps}/>}/>
+                        }
                         <Route exact path="/login" component={Login}/>
+                        <Route path="*" component={NotFound}/>
                     </Switch>
                 </div>
             );

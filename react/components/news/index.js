@@ -5,8 +5,9 @@ class Index extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            news: [1, 2, 3, 4, 5, 6]
+            news: []
         };
+        this.getNews();
     }
 
     getNews(){
@@ -21,7 +22,7 @@ class Index extends React.Component {
 
     render(){
         return (
-            <div className="ui container">
+            <div className="ui text container">
                 <h1 className="unique">News</h1>
                 <div className="one column grid">
                     {this.state.news.map(eachArticle)}
@@ -31,14 +32,14 @@ class Index extends React.Component {
         function eachArticle(article, i){
             return (
                 <div key={i} className="ui segment news-block">
-                    <h3 className="title">Title</h3>
-                    <p className="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error magni omnis perferendis qui quo recusandae tenetur ut? Adipisci alias autem ducimus laboriosam numquam officiis soluta tempora tenetur voluptatem voluptates! Quidem!</p>
+                    <h3 className="title">{article.title}</h3>
+                    <p className="content">{article.content}</p>
                     <div className="footer">
                         <span className="ui image label">
-                            <img src="/images/avatar/small/joe.jpg"/> Richard Franklin
+                            <img src={article.author.google.photos[0].value}/> {article.author.google.displayName}
                         </span>
                         <span className="ui label">
-                            18 August 2017
+                            {new Date(article.createdAt).toDateString()}
                         </span>
                     </div>
                 </div>

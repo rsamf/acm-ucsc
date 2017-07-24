@@ -44,6 +44,12 @@ class Index extends React.Component {
     }
 
     render(){
+        let upcomings = this.state.events.filter((event)=>{
+            return new Date(Date.now()) <= new Date(event.date);
+        });
+        let pastEvents = this.state.events.filter((event)=>{
+            return new Date(Date.now()) > new Date(event.date);
+        });
         return (
             <div className="ui container">
                 <h1 className="unique">Events</h1>
@@ -55,49 +61,50 @@ class Index extends React.Component {
                         />
                     </div>
                     <div className="column">
-                        <div className="ui blue segment">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, laudantium officia. Beatae corporis ipsam officia qui rem. Cupiditate ex fuga id incidunt libero, non reprehenderit. Eum incidunt laborum omnis recusandae?
-                            </p>
-                        </div>
+                        {upcomings.map(renderEvent)}
                     </div>
                 </div>
                 <h3>Past</h3>
                 <div className="ui two column grid">
                     <div className="column">
-                        {this.state.events.map(eachEvenEvent)}
+                        {pastEvents.map((event,i)=>{
+                            if(i % 2 === 0) {
+                                return renderEvent(event, i);
+                            }
+                        })}
                     </div>
                     <div className="column">
-                        {this.state.events.map(eachOddEvent)}
-
+                        {pastEvents.map((event,i)=>{
+                            if(i % 2 === 1) {
+                                return renderEvent(event, i);
+                            }
+                        })}
                     </div>
                 </div>
             </div>
         );
-        function getUpcomingEvents(){
-
-        }
-        function eachEvenEvent(event, i){
-            if(i%2===0){
-                return (
-                    <div key={i} className="ui segment">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
-                        </p>
+        function renderEvent(event, i){
+            console.log(event);
+            return (
+                <div key={i} className="ui segment event">
+                    <h2 className="ui header">
+                        <span className="title">{event.title}</span>
+                        <div className="sub header">
+                            <div className="ui two column grid">
+                                <div className="left aligned column">
+                                    <span className="date"><i className="blue calendar icon"/> {new Date(event.date).toDateString()}</span>
+                                </div>
+                                <div className="right aligned column">
+                                    <span className="location"><i className="red marker icon"/> {event.location} </span>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                    <div className="description">
+                        {event.description}
                     </div>
-                );
-            }
-        }
-        function eachOddEvent(event, i){
-            if(i%2===1){
-                return (
-                    <div key={i} className="ui segment">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis doloribus eum fugit necessitatibus nemo nulla omnis perspiciatis possimus quae quia, sunt ullam. Asperiores dolorum fugit ipsam, labore nostrum possimus voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias beatae, dignissimos distinctio est fuga, ipsum natus nihil odio quae quam quod ratione rerum saepe suscipit vel velit voluptate voluptates.
-                        </p>
-                    </div>
-                );
-            }
+                </div>
+            );
         }
     }
 }

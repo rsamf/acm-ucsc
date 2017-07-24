@@ -6,6 +6,10 @@ const EventSchema = new mongoose.Schema({
     location : String,
     date : Date,
     facebook : String,
+    article : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "article"
+    },
     images : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "image"

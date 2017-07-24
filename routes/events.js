@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const Event = require('../models/event');
 const User = require('../models/user');
-const fault = require('../bin/globals').fault;
+const globals = require('../bin/globals');
+const fault = globals.fault;
 
 const upload = require('multer')({
     dest : './uploads/',
@@ -32,26 +33,35 @@ router.get('/:id', function(req, res, next){
     });
 });
 
-router.post('/', function(req, res, next){
-    Event.create(req.body, (err, event)=>{
-        fault(err, next);
-        User.findById(req.user._id, (err, user)=>{
-            fault(err, next);
-            user.postedEvents.push(event);
-            user.save();
+router.post('/', [globals.auth.isOfficial, upload.single('photo')], function(req, res, next){
+    let post = req.body;
+    post.date = new Date(post.date);
+    console.log(post.date);
+    if(post.date == "Invalid Date") {
+        res.json({
+            error : "Invalid Date"
         });
-        res.json(event);
-    });
+    } else {
+        Event.create(post, (err, event)=>{
+            fault(err, next);
+            User.findById(req.user._id, (err, user)=>{
+                fault(err, next);
+                user.postedEvents.push(event);
+                user.save();
+            });
+            res.json(event);
+        });
+    }
 });
 
-router.put('/:id', function(req, res, next){
+router.put('/:id', [globals.auth.isOfficial, upload.single('photo')], function(req, res, next){
     Event.findByIdAndUpdate(req.params.id, req.body, (err, event)=>{
         fault(err, next);
         res.json(event);
     });
 });
 
-router.delete('/:id', function(req, res, next){
+router.delete('/:id', globals.auth.isOfficial, function(req, res, next){
     Event.findByIdAndRemove(req.params.id, (err)=>{
         fault(err, next);
         User.findById(req.user._id, (err, user)=>{

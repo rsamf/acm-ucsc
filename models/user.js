@@ -1,8 +1,20 @@
 const mongoose = require('mongoose');
+const Role = {
+    Member : "Member",
+    Chair : "Chair",
+    ViceChair : "Vice Chair",
+    Treasurer : "Treasurer",
+    Secretary : "Secretary",
+    Webmaster : "Webmaster",
+    CRC : "Corporate Relations Chair"
+};
 
 const UserSchema = new mongoose.Schema({
     google : Object,
-    role : String,
+    role : {
+        type : String,
+        default : Role.Member
+    },
     postedEvents : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "event"

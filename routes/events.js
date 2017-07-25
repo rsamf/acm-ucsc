@@ -1,11 +1,14 @@
 const router = require('express').Router();
 const Event = require('../models/event');
 const User = require('../models/user');
+const Image = require('../models/image');
 const globals = require('../bin/globals');
 const fault = globals.fault;
+const path = require('path');
+const fs = require('fs');
 
 const upload = require('multer')({
-    dest : './uploads/',
+    dest : path.resolve(__dirname, '../uploads/'),
     inMemory : false,
     onError : ()=>{
         console.error("Error uploading image");
@@ -34,24 +37,50 @@ router.get('/:id', function(req, res, next){
 });
 
 router.post('/', [globals.auth.isOfficial, upload.single('photo')], function(req, res, next){
-    let post = req.body;
-    post.date = new Date(post.date);
-    console.log(post.date);
-    if(post.date == "Invalid Date") {
-        res.json({
-            error : "Invalid Date"
+    if(req.file){
+        console.log(req.file);
+        fs.readFile(path.resolve(__dirname,`../uploads/${req.file.filename}`), (err, data)=>{
+            Image.create({
+                type : req.file.mimetype,
+                value : data
+            }, (err, image)=>{
+                fault(err, next);
+                postEvent(err, image._id, event => {
+                    res.json(event);
+                });
+            });
         });
     } else {
-        Event.create(post, (err, event)=>{
-            fault(err, next);
-            User.findById(req.user._id, (err, user)=>{
-                fault(err, next);
-                user.postedEvents.push(event);
-                user.save();
-            });
+        postEvent(null, null, event => {
             res.json(event);
         });
     }
+
+    function postEvent(err, image, callback){
+        fault(err, next);
+        console.log("raw body", req.body);
+
+        let post = req.body;
+        post.date = new Date(`${req.body.date}`);
+        post.images = [image];
+        console.log("post", post);
+        if(post.date == "Invalid Date") {
+            res.json({
+                error : "Invalid Date"
+            });
+        } else {
+            Event.create(post, (err, event)=>{
+                fault(err, next);
+                User.findById(req.user._id, (err, user)=>{
+                    fault(err, next);
+                    user.postedEvents.push(event);
+                    user.save();
+                });
+                callback(event);
+            });
+        }
+    }
+
 });
 
 router.put('/:id', [globals.auth.isOfficial, upload.single('photo')], function(req, res, next){

@@ -1,7 +1,7 @@
 import React from 'react';
 import eventsNetworking from '../../networking/events';
 import newsNetworking from '../../networking/news';
-
+import globals from '../../globals';
 
 class Dashboard extends React.Component {
 
@@ -26,7 +26,6 @@ class Dashboard extends React.Component {
                 events : data
             });
             self.state.events.forEach((event)=>{
-                console.log("changing data-value of " + event._id);
                 $('#'+event._id).attr('data-value', event._id);
             });
         });
@@ -35,7 +34,6 @@ class Dashboard extends React.Component {
                 articles : data
             });
             self.state.articles.forEach((article)=>{
-                console.log("changing data-value of " + article._id);
                 $('#'+article._id).attr('data-value', article._id);
             });
         })
@@ -57,35 +55,52 @@ class Dashboard extends React.Component {
             <div>
                 {renderPosts()}
                 <div className="ui segment">
-                    <div className="fluid ui button">Begin ACM Meeting Sign In</div>
+                    <div className="fluid ui disabled button">Begin ACM Meeting Sign In</div>
                 </div>
             </div>
         );
         function articleChange(property, evt){
             let article = self.state.newArticle;
-            article[property] = evt.currentTarget.value;
+            if(property === "photo"){
+                let file = evt.currentTarget.files[0];
+                if(globals.validFileType(file)){
+                    $("#article-image-preview").attr('src', window.URL.createObjectURL(file));
+                    article.photo = file;
+                }
+            } else {
+                article[property] = evt.currentTarget.value;
+            }
             self.setState({
                 newArticle : article
             });
-            console.log(self.state.newArticle);
         }
         function eventChange(property, evt){
             let event = self.state.newEvent;
-            event[property] = evt.currentTarget.value;
+            if(property === "photo"){
+                let file = evt.currentTarget.files[0];
+                if(globals.validFileType(file)){
+                    event.photo = file;
+                    $("#event-image-preview").attr('src', window.URL.createObjectURL(file));
+                }
+            } else {
+                event[property] = evt.currentTarget.value;
+            }
             self.setState({
                 newEvent : event
             });
-            console.log(self.state.newEvent);
         }
         function submitEvent(){
             self.setState({
                 eventLoading : true
             });
-            let newEvent = self.state.newEvent;
-            newEvent.event = $('#event-article').val();
-            console.log("Sending off:", newEvent);
+            // Create FormData object to send through and append all data to it
+            let newEvent = new FormData();
+            Object.keys(self.state.newEvent).forEach(key=>{
+                newEvent.append(key, self.state.newEvent[key]);
+            });
+            // Also add event article if there is one
+            newEvent.append("article", $('#event-article').val());
             eventsNetworking.postEvent(newEvent, data=>{
-                console.log(data);
                 self.setState({
                     eventLoading : false,
                     message : {
@@ -100,11 +115,15 @@ class Dashboard extends React.Component {
             self.setState({
                 articleLoading : true
             });
-            let newArticle = self.state.newArticle;
-            newArticle.event = $('#article-event').val();
-            console.log("Sending off:", newArticle);
-            newsNetworking.postArticle(self.state.newArticle, data=>{
-                console.log(data);
+            // Create FormData object to send through and append all data to it
+            let newArticle = new FormData();
+            Object.keys(self.state.newArticle).forEach(key=>{
+                newArticle.append(key, self.state.newArticle[key]);
+
+            });
+            // Also add article event if there is one
+            newArticle.append("event", $('#article-event').val());
+            newsNetworking.postArticle(newArticle, data=>{
                 self.setState({
                     articleLoading : false,
                     message : {
@@ -161,8 +180,13 @@ class Dashboard extends React.Component {
                                 <input type="text" id="event-location" onChange={evt=>eventChange("location", evt)}/>
                             </div>
                             <div className="required field">
-                                <label htmlFor="event-description">Short Description (You can add an article about this to explain further details)</label>
+                                <label htmlFor="event-description">Description</label>
                                 <input type="text" id="event-description" onChange={evt=>eventChange("description", evt)}/>
+                            </div>
+                            <div className="field">
+                                <label htmlFor="event-image">Photo</label>
+                                <input type="file" id="event-image" accept="image/*" onChange={evt=>eventChange("photo", evt)}/>
+                                <img className="ui small image" id="event-image-preview"/>
                             </div>
                             <div className="fields">
                                 <div className="field">
@@ -222,6 +246,11 @@ class Dashboard extends React.Component {
                             <div className="required field">
                                 <label htmlFor="article-content">Content</label>
                                 <textarea id="article-content" onChange={evt=>articleChange("content", evt)}/>
+                            </div>
+                            <div className="field">
+                                <label htmlFor="article-image">Photo</label>
+                                <input type="file" id="article-image" accept="image/*" onChange={evt=>articleChange("photo", evt)}/>
+                                <img className="ui small image" id="article-image-preview"/>
                             </div>
                             <div className="field">
                                 <label htmlFor="article-event">Link an Event</label>

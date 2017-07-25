@@ -21,25 +21,15 @@ Test.create({
     console.log(test);
 });
 
-User.findById("59719600291d2d35b4b36bd1", (err, user)=>{
-    console.log("FOUND:", user);
-    user.role = "Webmaster";
-    user.save();
-    console.log("USER IS NOW:", user);
-});
 
 passport.serializeUser(function(user, done) {
-    done(null, user._id);
+    console.log("S");
+    return done(null, user);
 });
 
-passport.deserializeUser(function(userId, done) {
+passport.deserializeUser(function(user, done) {
     console.log("D");
-    User.findById(userId, function(err, user){
-        if(!err) {
-            return done(null, user);
-        }
-        return done(null, false);
-    });
+    return done(null, user);
 });
 
 const strategy = new GoogleStrategy({
@@ -56,7 +46,6 @@ const strategy = new GoogleStrategy({
                 } else if(user) {
                     User.findByIdAndUpdate(user._id, { accessToken : accessToken, google : profile }, (err, user)=>{
                         if(!err){
-                            console.log(user);
                             return done(null, user);
                         }
                         return done(null, false);

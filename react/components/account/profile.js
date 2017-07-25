@@ -1,4 +1,5 @@
 import React from 'react';
+import globals from '../../globals';
 
 class Profile extends React.Component {
 
@@ -8,7 +9,6 @@ class Profile extends React.Component {
     }
 
     render(){
-        console.log(user);
         let imageURL = user.google.photos[0].value.replace(/\?sz=\d+/g, '');
         return (
             <div className="ui stackable grid">
@@ -21,7 +21,7 @@ class Profile extends React.Component {
                             <div className="content">
                                 <a className="header">{user.google.displayName}</a>
                                 <div className="meta">
-                                    <span className="date">{user.role}</span>
+                                    <span className={"ui label " + globals.getUserColor(user)}>{user.role}</span>
                                 </div>
                             </div>
                         </div>

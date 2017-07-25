@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
+const globals = require('../bin/globals');
 
 router.get('/google', passport.authenticate('google', {
     scope : [
@@ -13,7 +14,7 @@ router.get('/google/callback', passport.authenticate('google', {
     failureRedirect : '/'
 }));
 
-router.get('/logout', function(req, res){
+router.get('/logout', globals.auth.isLoggedIn, function(req, res){
     req.logout();
     res.redirect('/');
 });

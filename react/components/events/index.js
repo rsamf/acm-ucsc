@@ -1,5 +1,6 @@
 import React from 'react';
 import networking from '../../networking/events';
+import { Link } from 'react-router-dom';
 const SMALL_THRESHOLD = 750;
 
 /*
@@ -34,9 +35,7 @@ class Index extends React.Component {
 
     getEvents(){
         let self = this;
-        console.log("getting events");
         networking.getEvents(data=>{
-            console.log("EVENTS:", data);
             self.setState({
                 events : data
             });
@@ -46,6 +45,8 @@ class Index extends React.Component {
     render(){
         let upcomings = this.state.events.filter((event)=>{
             return new Date(Date.now()) <= new Date(event.date);
+        }).sort((a, b)=>{
+            return (new Date(a.date) - new Date(b.date));
         });
         let pastEvents = this.state.events.filter((event)=>{
             return new Date(Date.now()) > new Date(event.date);
@@ -60,31 +61,53 @@ class Index extends React.Component {
                                 id="calendar" width="400" height="400" frameBorder="0" scrolling="no"
                         />
                     </div>
+                    {/* First two upcomings besides calendar on right*/}
                     <div className="column">
-                        {upcomings.map(renderEvent)}
+                        {upcomings.slice(0, 2).map(renderEvent)}
                     </div>
+                </div>
+                {/* Display rest right below */}
+                <div className="ui stackable two column grid">
+                    {upcomings.slice(2, upcomings.length).map((event, i)=>{
+                        return (
+                            <div key={i} className="column">
+                                {renderEvent(event, i)}
+                            </div>
+                        );
+                    })}
                 </div>
                 <h3>Past</h3>
-                <div className="ui two column grid">
-                    <div className="column">
-                        {pastEvents.map((event,i)=>{
-                            if(i % 2 === 0) {
-                                return renderEvent(event, i);
-                            }
-                        })}
+                {(
+                    this.state.screenWidth === "LARGE" &&
+                    <div className="ui two column grid">
+                        <div className="column">
+                            {pastEvents.map((event,i)=>{
+                                if(i % 2 === 0) {
+                                    return renderEvent(event, i);
+                                }
+                            })}
+                        </div>
+                        <div className="column">
+                            {pastEvents.map((event,i)=>{
+                                if(i % 2 === 1) {
+                                    return renderEvent(event, i);
+                                }
+                            })}
+                        </div>
                     </div>
-                    <div className="column">
-                        {pastEvents.map((event,i)=>{
-                            if(i % 2 === 1) {
-                                return renderEvent(event, i);
-                            }
-                        })}
+                    ) || (
+                    this.state.screenWidth === "SMALL" &&
+                    <div className="ui one column grid">
+                        <div className="column">
+                            {pastEvents.map(renderEvent)}
+                        </div>
                     </div>
-                </div>
+                )}
+
             </div>
         );
         function renderEvent(event, i){
-            console.log(event);
+            let image = event.images[0];
             return (
                 <div key={i} className="ui segment event">
                     <h2 className="ui header">
@@ -101,8 +124,15 @@ class Index extends React.Component {
                         </div>
                     </h2>
                     <div className="description">
+                        {image && <img src={`/images/${image}`} alt="Event Image" className="ui small left floated image"/>}
                         {event.description}
                     </div>
+                    {
+                        event.article &&
+                        <Link to="/news" className="ui blue label">
+                            <span>See Announcement</span> <i className="chevron right icon"/>
+                        </Link>
+                    }
                 </div>
             );
         }

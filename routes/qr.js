@@ -1,11 +1,12 @@
 const router = require('express').Router();
 const User = require('../models/user');
 const QR = require('../models/qr');
-const fault = require('../bin/globals').fault;
+const globals = require('../bin/globals');
+const fault = globals.fault;
 const qr = require('qr-image');
 const fs = require('fs');
 
-router.get('/', function(req, res, next){
+router.get('/', globals.auth.isLoggedIn, function(req, res, next){
     getUserQR(String(req.user._id), req, res, next);
 });
 

@@ -5,7 +5,9 @@ const fault = require('../bin/globals').fault;
 router.get('/:id', function(req, res, next){
     Image.findById(req.params.id, (err, image)=>{
         fault(err, next);
-        res.send(image);
+        if(!image) return next();
+        res.type(image.type);
+        res.send(image.value);
     });
 });
 

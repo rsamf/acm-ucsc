@@ -27,6 +27,7 @@ const UserSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : "qr"
     },
+    checkIns : Number,
     accessToken : String,
     refreshToken : String
 }, {

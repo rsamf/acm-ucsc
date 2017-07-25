@@ -26,9 +26,13 @@ class Index extends React.Component {
                     <div className="row">
                         <div className="column center aligned">
                             <h1>Association for Computing Machinery at UCSC</h1>
-                            <Link to="/login" className="ui teal basic right labeled icon button">
-                                Get Involved <i className="right chevron icon"/>
-                            </Link>
+                            {
+                                !user &&
+                                <Link to="/login" className="ui teal basic right labeled icon button">
+                                    Get Involved <i className="right chevron icon"/>
+                                </Link>
+                            }
+
                         </div>
                     </div>
                 </div>

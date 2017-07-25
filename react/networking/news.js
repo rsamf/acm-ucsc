@@ -13,6 +13,8 @@ module.exports = {
             method : "POST",
             url : "/articles",
             data : data,
+            contentType : false,
+            processData : false,
             dataType : "json",
             success : callback,
             error : console.error

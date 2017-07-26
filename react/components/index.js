@@ -22,9 +22,6 @@ class Index extends React.Component {
             direction : 'downward'
         });
     }
-    componentDidUpdate(){
-        console.log(this.props);
-    }
 
     render(){
         if(!this.state.loading){

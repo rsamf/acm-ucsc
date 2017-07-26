@@ -12,7 +12,6 @@ class Index extends React.Component {
     }
 
     render(){
-        console.log(this.props);
         return (
             <div className="ui container">
                 <div className="ui secondary pointing menu">

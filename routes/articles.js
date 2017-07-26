@@ -6,6 +6,7 @@ const globals = require('../bin/globals');
 const fault = globals.fault;
 const path = require('path');
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 const upload = require('multer')({
     dest : path.resolve(__dirname, '../uploads/'),
@@ -58,9 +59,14 @@ router.post('/', [globals.auth.isOfficial, upload.single('photo')], function(req
     function postArticle(err, image, callback) {
         fault(err, next);
 
-        let post = req.body;
-        post.author = req.user;
-        post.images = [image];
+        let post =  {
+            title : req.body.title,
+            content : req.body.content,
+            author : req.user,
+            images : [image]
+        };
+        if(mongoose.Types.ObjectId.isValid(req.body.event)) post.event = req.body.event;
+
         Article.create(post, (err, article)=>{
             fault(err, next);
             User.findById(req.user._id, (err, user)=>{

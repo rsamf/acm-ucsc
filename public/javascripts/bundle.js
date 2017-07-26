@@ -26002,11 +26002,6 @@ var Index = function (_React$Component) {
             });
         }
     }, {
-        key: 'componentDidUpdate',
-        value: function componentDidUpdate() {
-            console.log(this.props);
-        }
-    }, {
         key: 'render',
         value: function render() {
             if (!this.state.loading) {
@@ -26250,7 +26245,6 @@ var Index = function (_React$Component) {
     _createClass(Index, [{
         key: 'render',
         value: function render() {
-            console.log(this.props);
             return _react2.default.createElement(
                 'div',
                 { className: 'ui container' },
@@ -26981,7 +26975,6 @@ var Index = function (_React$Component) {
             loadings: []
         };
         _this.getEvents();
-        console.log("in ", _this.props);
         return _this;
     }
 

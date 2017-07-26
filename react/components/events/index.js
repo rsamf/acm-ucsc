@@ -16,7 +16,6 @@ class Index extends React.Component {
             loadings : []
         };
         this.getEvents();
-        console.log("in ", this.props);
     }
     componentDidMount(){
         let self = this;

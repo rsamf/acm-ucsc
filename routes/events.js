@@ -6,6 +6,7 @@ const globals = require('../bin/globals');
 const fault = globals.fault;
 const path = require('path');
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 const upload = require('multer')({
     dest : path.resolve(__dirname, '../uploads/'),
@@ -60,10 +61,15 @@ router.post('/', [globals.auth.isOfficial, upload.single('photo')], function(req
         fault(err, next);
         console.log("raw body", req.body);
 
-        let post = req.body;
-        post.date = new Date(`${req.body.date}`);
-        post.images = [image];
-        console.log("post", post);
+        let post =  {
+            title : req.body.title,
+            location : req.body.location,
+            description : req.body.description,
+            date : new Date(`${req.body.date}`),
+            images : [image]
+        };
+        if(mongoose.Types.ObjectId.isValid(req.body.article)) post.article = req.body.article;
+
         if(post.date == "Invalid Date") {
             res.json({
                 error : "Invalid Date"

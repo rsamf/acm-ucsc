@@ -91,8 +91,17 @@ router.put('/:id', [globals.auth.isOfficial, upload.single('photo')], function(r
 });
 
 router.delete('/:id', globals.auth.isOfficial, function(req, res, next){
-    Event.findByIdAndRemove(req.params.id, (err)=>{
+    Event.findById(req.params.id, (err, event)=>{
         fault(err, next);
+
+        // Delete images of event
+        event.images.forEach((image)=>{
+            Image.findByIdAndRemove(image, (err)=>{
+                fault(err, next);
+            });
+        });
+
+        // Delete user's reference to event
         User.findById(req.user._id, (err, user)=>{
             fault(err, next);
             user.postedEvents.forEach((event, i)=>{
@@ -102,6 +111,11 @@ router.delete('/:id', globals.auth.isOfficial, function(req, res, next){
             });
             user.save();
         });
+
+        // Delete Event
+        event.remove();
+
+        // Respond with success
         res.json({
             message : "Success"
         });

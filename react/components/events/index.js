@@ -12,7 +12,8 @@ class Index extends React.Component {
         super(props);
         this.state = {
             screenWidth : $(window).width() <= SMALL_THRESHOLD ? "SMALL" : "LARGE",
-            events : []
+            events : [],
+            loadings : []
         };
         this.getEvents();
     }
@@ -37,12 +38,21 @@ class Index extends React.Component {
         let self = this;
         networking.getEvents(data=>{
             self.setState({
-                events : data
+                events : data,
+                loadings : data.map(()=>false)
             });
+            if(user && user.role !== "Member"){
+                $('.ui.segment.event').popup({
+                    hoverable : true,
+                    position : 'right center',
+                    inline : true
+                });
+            }
         });
     }
 
     render(){
+        let self = this;
         let upcomings = this.state.events.filter((event)=>{
             return new Date(Date.now()) <= new Date(event.date);
         }).sort((a, b)=>{
@@ -109,32 +119,75 @@ class Index extends React.Component {
         function renderEvent(event, i){
             let image = event.images[0];
             return (
-                <div key={i} className="ui segment event">
-                    <h2 className="ui header">
-                        <span className="title">{event.title}</span>
-                        <div className="sub header">
-                            <div className="ui two column grid">
-                                <div className="left aligned column">
-                                    <span className="date"><i className="blue calendar icon"/> {new Date(event.date).toDateString()}</span>
+                <div key={i}>
+                    <div  className="ui segment event" id={event._id}>
+                        {
+                            self.state.loadings[i] &&
+                            <div className="ui active inverted dimmer">
+                                <div className="ui text loader">
+                                    Loading...
                                 </div>
-                                <div className="right aligned column">
-                                    <span className="location"><i className="red marker icon"/> {event.location} </span>
+                            </div>
+                        }
+                        <h2 className="ui header">
+                            <span className="title">{event.title}</span>
+                            <div className="sub header">
+                                <div className="ui two column grid">
+                                    <div className="left aligned column">
+                                        <span className="date"><i className="blue calendar icon"/> {new Date(event.date).toDateString()}</span>
+                                    </div>
+                                    <div className="right aligned column">
+                                        <span className="location"><i className="red marker icon"/> {event.location} </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </h2>
+                        <div className="description">
+                            {image && <img src={`/images/${image}`} alt="Event Image" className="ui small left floated image"/>}
+                            {event.description}
+                        </div>
+                        {
+                            event.article &&
+                            <Link to="/news" className="ui blue label">
+                                <span>See Announcement</span> <i className="chevron right icon"/>
+                            </Link>
+                        }
+                    </div>
+                    {
+                        user && user.role !== "Member" &&
+                        <div className="ui special popup" id={`popup-${event._id}`}>
+                            <div className="title">Controls</div>
+                            <div className="content">
+                                <div className="ui icon buttons">
+                                <span className="ui icon orange button disabled">
+                                    <i className="edit icon"/>
+                                </span>
+                                    <span className="ui icon red button" onClick={deleteEvent}>
+                                    <i className="trash outline icon"/>
+                                </span>
                                 </div>
                             </div>
                         </div>
-                    </h2>
-                    <div className="description">
-                        {image && <img src={`/images/${image}`} alt="Event Image" className="ui small left floated image"/>}
-                        {event.description}
-                    </div>
-                    {
-                        event.article &&
-                        <Link to="/news" className="ui blue label">
-                            <span>See Announcement</span> <i className="chevron right icon"/>
-                        </Link>
                     }
+
                 </div>
             );
+            function deleteEvent(){
+                let loadings = self.state.loadings;
+                let events = self.state.events;
+                loadings[i] = true;
+                self.setState({
+                    loadings : loadings
+                });
+                networking.deleteEvent(event._id, (data)=>{
+                    events.splice(i, 1);
+                    loadings.splice(i, 1);
+                    self.setState({
+                        loadings : loadings,
+                        events : events,
+                    });
+                });
+            }
         }
     }
 }

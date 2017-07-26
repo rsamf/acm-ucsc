@@ -31,7 +31,7 @@ passport.deserializeUser(function(user, done) {
     console.log("D");
     return done(null, user);
 });
-const awsurl = 'ec2-52-38-143-227.us-west-2.compute.amazonaws.com';
+const awsurl = 'http://ec2-52-38-143-227.us-west-2.compute.amazonaws.com';
 const strategy = new GoogleStrategy({
         clientID : "1060625076984-7lkslmheimde03btvdmnp8ijai7jp4fl.apps.googleusercontent.com",
         clientSecret : "QJ25PMCNvV2YYGrLqqAtm3WJ",

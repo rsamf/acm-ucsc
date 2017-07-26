@@ -19,5 +19,14 @@ module.exports = {
             success : callback,
             error : console.error
         });
+    },
+    deleteArticle : function(id, callback){
+        $.ajax({
+            method : "DELETE",
+            url : "/articles/"+id,
+            dataType : "json",
+            success : callback,
+            error : console.error
+        });
     }
 };

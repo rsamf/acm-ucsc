@@ -24,7 +24,6 @@ module.exports = {
         return false;
     },
     getUserColor : function(user){
-        console.log(user);
         switch(user.role){
             case Role.Member:
                 return "grey";

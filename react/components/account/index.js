@@ -8,6 +8,7 @@ import NotFound from '../404';
 class Index extends React.Component {
     constructor(props){
         super(props);
+        $(window).off('resize');
     }
 
     render(){

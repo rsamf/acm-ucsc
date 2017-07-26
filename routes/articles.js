@@ -81,8 +81,17 @@ router.put('/:id', [globals.auth.isOfficial, upload.single('photo')], function(r
 });
 
 router.delete('/:id', globals.auth.isOfficial, function(req, res, next){
-    Article.findByIdAndRemove(req.params.id, (err)=>{
+    Article.findById(req.params.id, (err, article)=>{
         fault(err, next);
+
+        // Remove all images
+        article.images.forEach((image)=>{
+            Image.findByIdAndRemove(image, err=>{
+                fault(err, next);
+            });
+        });
+
+        // Remove user's ref
         User.findById(req.user._id, (err, user)=>{
             fault(err, next);
             user.postedArticles.forEach((article, i)=>{
@@ -92,6 +101,11 @@ router.delete('/:id', globals.auth.isOfficial, function(req, res, next){
             });
             user.save();
         });
+
+        // Remove article
+        article.remove();
+
+        // Respond with a success
         res.json({
             message : "Success"
         });

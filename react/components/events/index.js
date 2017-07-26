@@ -16,20 +16,22 @@ class Index extends React.Component {
             loadings : []
         };
         this.getEvents();
+        console.log("in ", this.props);
     }
     componentDidMount(){
-        console.log(this.state.screenWidth);
         let self = this;
         $(window).resize(()=>{
-            console.log(self.state.screenWidth, $(window).width());
-            if($(window).width() <= SMALL_THRESHOLD){
-                self.setState({
-                    screenWidth : "SMALL"
-                });
-            } else {
-                self.setState({
-                    screenWidth : "LARGE"
-                });
+            console.log(self.props.location.pathname);
+            if(self.props.location.pathname === "/events") {
+                if($(window).width() <= SMALL_THRESHOLD){
+                    self.setState({
+                        screenWidth : "SMALL"
+                    });
+                } else {
+                    self.setState({
+                        screenWidth : "LARGE"
+                    });
+                }
             }
         });
     }
@@ -174,17 +176,20 @@ class Index extends React.Component {
             );
             function deleteEvent(){
                 let loadings = self.state.loadings;
-                let events = self.state.events;
                 loadings[i] = true;
                 self.setState({
                     loadings : loadings
                 });
-                networking.deleteEvent(event._id, (data)=>{
-                    events.splice(i, 1);
+                console.log("Deleting event with id", event._id);
+                console.log("Hello?");
+                networking.deleteEvent(event._id, ()=>{
                     loadings.splice(i, 1);
+                    let idToDelete = event._id;
                     self.setState({
                         loadings : loadings,
-                        events : events,
+                        events : self.state.events.filter((event)=>{
+                            return (event._id !== idToDelete);
+                        }),
                     });
                 });
             }

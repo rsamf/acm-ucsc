@@ -7315,7 +7315,6 @@ module.exports = {
         return false;
     },
     getUserColor: function getUserColor(user) {
-        console.log(user);
         switch (user.role) {
             case Role.Member:
                 return "grey";
@@ -11395,6 +11394,15 @@ module.exports = {
             data: data,
             contentType: false,
             processData: false,
+            dataType: "json",
+            success: callback,
+            error: console.error
+        });
+    },
+    deleteArticle: function deleteArticle(id, callback) {
+        $.ajax({
+            method: "DELETE",
+            url: "/articles/" + id,
             dataType: "json",
             success: callback,
             error: console.error
@@ -26074,8 +26082,12 @@ var Index = function (_React$Component) {
                         _reactRouterDom.Switch,
                         null,
                         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: '/events', component: _events2.default }),
-                        _react2.default.createElement(_reactRouterDom.Route, { path: '/news', component: _news2.default }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: '/events', render: function render(routeProps) {
+                                return _react2.default.createElement(_events2.default, routeProps);
+                            } }),
+                        _react2.default.createElement(_reactRouterDom.Route, { path: '/news', render: function render(routeProps) {
+                                return _react2.default.createElement(_news2.default, routeProps);
+                            } }),
                         user && _react2.default.createElement(_reactRouterDom.Route, { path: '/account', render: function render(routeProps) {
                                 return _react2.default.createElement(_account2.default, routeProps);
                             } }),
@@ -26126,7 +26138,10 @@ var Index = function (_React$Component) {
     function Index(props) {
         _classCallCheck(this, Index);
 
-        return _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
+
+        $(window).off('resize');
+        return _this;
     }
 
     _createClass(Index, [{
@@ -26226,7 +26241,10 @@ var Index = function (_React$Component) {
     function Index(props) {
         _classCallCheck(this, Index);
 
-        return _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
+
+        $(window).off('resize');
+        return _this;
     }
 
     _createClass(Index, [{
@@ -26963,24 +26981,26 @@ var Index = function (_React$Component) {
             loadings: []
         };
         _this.getEvents();
+        console.log("in ", _this.props);
         return _this;
     }
 
     _createClass(Index, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            console.log(this.state.screenWidth);
             var self = this;
             $(window).resize(function () {
-                console.log(self.state.screenWidth, $(window).width());
-                if ($(window).width() <= SMALL_THRESHOLD) {
-                    self.setState({
-                        screenWidth: "SMALL"
-                    });
-                } else {
-                    self.setState({
-                        screenWidth: "LARGE"
-                    });
+                console.log(self.props.location.pathname);
+                if (self.props.location.pathname === "/events") {
+                    if ($(window).width() <= SMALL_THRESHOLD) {
+                        self.setState({
+                            screenWidth: "SMALL"
+                        });
+                    } else {
+                        self.setState({
+                            screenWidth: "LARGE"
+                        });
+                    }
                 }
             });
         }
@@ -27197,17 +27217,20 @@ var Index = function (_React$Component) {
                 );
                 function deleteEvent() {
                     var loadings = self.state.loadings;
-                    var events = self.state.events;
                     loadings[i] = true;
                     self.setState({
                         loadings: loadings
                     });
-                    _events2.default.deleteEvent(event._id, function (data) {
-                        events.splice(i, 1);
+                    console.log("Deleting event with id", event._id);
+                    console.log("Hello?");
+                    _events2.default.deleteEvent(event._id, function () {
                         loadings.splice(i, 1);
+                        var idToDelete = event._id;
                         self.setState({
                             loadings: loadings,
-                            events: events
+                            events: self.state.events.filter(function (event) {
+                                return event._id !== idToDelete;
+                            })
                         });
                     });
                 }
@@ -27260,9 +27283,11 @@ var Index = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
 
         _this.state = {
-            news: []
+            news: [],
+            loadings: []
         };
         _this.getNews();
+        $(window).off('resize');
         return _this;
     }
 
@@ -27271,15 +27296,26 @@ var Index = function (_React$Component) {
         value: function getNews() {
             var self = this;
             _news2.default.getNews(function (data) {
-                console.log(data);
                 self.setState({
-                    news: data
+                    news: data,
+                    loadings: data.map(function () {
+                        return false;
+                    })
                 });
+                console.log(self.state.loadings);
+                if (user && user.role !== "Member") {
+                    $('.ui.segment.news-block').popup({
+                        hoverable: true,
+                        position: 'right center',
+                        inline: true
+                    });
+                }
             });
         }
     }, {
         key: 'render',
         value: function render() {
+            var self = this;
             return _react2.default.createElement(
                 'div',
                 { className: 'ui text container' },
@@ -27299,50 +27335,97 @@ var Index = function (_React$Component) {
                 var authorColor = _globals2.default.getUserColor(article.author);
                 return _react2.default.createElement(
                     'div',
-                    { key: i, className: 'ui segment news-block' },
-                    _react2.default.createElement(
-                        'h3',
-                        { className: 'title' },
-                        article.title
-                    ),
-                    image && _react2.default.createElement('img', { src: '/images/' + image, alt: 'Article Image', className: 'ui left floated small image' }),
-                    _react2.default.createElement(
-                        'p',
-                        { className: 'content' },
-                        article.content
-                    ),
+                    { key: i },
                     _react2.default.createElement(
                         'div',
-                        { className: 'footer' },
+                        { className: 'ui segment news-block' },
                         _react2.default.createElement(
-                            'span',
-                            { className: 'ui image ' + authorColor + ' label' },
-                            _react2.default.createElement('img', { src: article.author.google.photos[0].value }),
-                            ' ',
-                            _react2.default.createElement(
-                                'span',
-                                { className: 'white' },
-                                article.author.google.displayName
-                            )
+                            'h3',
+                            { className: 'title' },
+                            article.title
+                        ),
+                        image && _react2.default.createElement('img', { src: '/images/' + image, alt: 'Article Image', className: 'ui left floated small image' }),
+                        _react2.default.createElement(
+                            'p',
+                            { className: 'content' },
+                            article.content
                         ),
                         _react2.default.createElement(
-                            'span',
-                            { className: 'ui label' },
-                            new Date(article.createdAt).toDateString()
-                        ),
-                        article.event && _react2.default.createElement(
-                            _reactRouterDom.Link,
-                            { to: '/events', className: 'ui blue label right aligned' },
+                            'div',
+                            { className: 'footer' },
                             _react2.default.createElement(
                                 'span',
-                                null,
-                                'See Event'
+                                { className: 'ui image ' + authorColor + ' label' },
+                                _react2.default.createElement('img', { src: article.author.google.photos[0].value }),
+                                ' ',
+                                _react2.default.createElement(
+                                    'span',
+                                    { className: 'white' },
+                                    article.author.google.displayName
+                                )
                             ),
-                            ' ',
-                            _react2.default.createElement('i', { className: 'chevron right icon' })
+                            _react2.default.createElement(
+                                'span',
+                                { className: 'ui label' },
+                                new Date(article.createdAt).toDateString()
+                            ),
+                            article.event && _react2.default.createElement(
+                                _reactRouterDom.Link,
+                                { to: '/events', className: 'ui blue label right aligned' },
+                                _react2.default.createElement(
+                                    'span',
+                                    null,
+                                    'See Event'
+                                ),
+                                ' ',
+                                _react2.default.createElement('i', { className: 'chevron right icon' })
+                            )
+                        )
+                    ),
+                    user && user.role !== "Member" && _react2.default.createElement(
+                        'div',
+                        { className: 'ui special popup', id: 'popup-' + article._id },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'title' },
+                            'Controls'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'content' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'ui icon buttons' },
+                                _react2.default.createElement(
+                                    'span',
+                                    { className: 'ui icon orange button disabled' },
+                                    _react2.default.createElement('i', { className: 'edit icon' })
+                                ),
+                                _react2.default.createElement(
+                                    'span',
+                                    { className: 'ui icon red button', onClick: deleteArticle },
+                                    _react2.default.createElement('i', { className: 'trash outline icon' })
+                                )
+                            )
                         )
                     )
                 );
+                function deleteArticle() {
+                    var loadings = self.state.loadings;
+                    var news = self.state.news;
+                    loadings[i] = true;
+                    self.setState({
+                        loadings: loadings
+                    });
+                    _news2.default.deleteArticle(article._id, function () {
+                        loadings.splice(i, 1);
+                        news.splice(i, 1);
+                        self.setState({
+                            loadings: loadings,
+                            news: news
+                        });
+                    });
+                }
             }
         }
     }]);

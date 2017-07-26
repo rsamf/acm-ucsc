@@ -67,8 +67,8 @@ class Index extends React.Component {
 
                     <Switch>
                         <Route exact path="/" component={Home}/>
-                        <Route path="/events" component={Events}/>
-                        <Route path="/news" component={News}/>
+                        <Route path="/events" render={routeProps=><Events {...routeProps}/>}/>
+                        <Route path="/news" render={routeProps=><News {...routeProps}/>}/>
                         {
                             user &&
                             <Route path="/account" render={routeProps=><Account {...routeProps}/>}/>
